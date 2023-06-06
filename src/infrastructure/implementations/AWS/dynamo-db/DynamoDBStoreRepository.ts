@@ -1,6 +1,6 @@
 import path from 'path'
 import * as dotenv from 'dotenv'
-import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand, DeleteItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { type Store } from 'domain/entities/Store.entity'
 import { type StoreRepository } from 'domain/repositories/Store.repository'
@@ -91,5 +91,15 @@ export class DynamoDBStoreRepository implements StoreRepository {
       lastEvaluatedKey: response.LastEvaluatedKey,
       stores
     }
+  }
+
+  async delete (code: string): Promise<void> {
+    const params = {
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      Key: marshall({
+        code
+      })
+    }
+    await this.client.send(new DeleteItemCommand(params))
   }
 }
