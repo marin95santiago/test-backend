@@ -11,24 +11,29 @@ API rest.
 
 ```bash
 git clone https://github.com/marin95santiago/test-backend.git
-
+```
 2. install project dependencies:
 
 ```bash
 cd your-project
 npm install
+```
 
 2. Configure environment variables:
 
+```bash
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 PORT
 SECRET
 ENVIRONMENT
 PROJECT
+```
 
-Usage
+## Usage
 To start the REST API server, run the following command:
-npm run start-api
 
+```bash
+npm run start-api
+```
 
