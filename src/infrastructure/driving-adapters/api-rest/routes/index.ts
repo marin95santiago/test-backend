@@ -1,16 +1,19 @@
 import { type Request, type Response, Router, type NextFunction } from 'express'
 import userRoutes from './user.routes'
 import loginRoutes from './login.routes'
+import storeRoutes from './store.routes'
 import { UserAlreadyExistException } from '../../../../domain/exceptions/user/UserAlreadyExist.exception'
 import { UserNotFoundException } from '../../../../domain/exceptions/user/UserNotFound.exception'
 import { LoginWrongPasswordException } from '../../../../domain/exceptions/user/LoginWrongPassword.exception'
 import { PermissionNotAvailableException } from '../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 import { MissingPropertyException } from '../../../../domain/exceptions/common/MissingProperty.exception'
+import { StoreAlreadyExistException } from '../../../../domain/exceptions/store/StoreAlreadyExist.exception'
 
 const route = Router()
 
 route.use('/api/users', userRoutes)
 route.use('/api/login', loginRoutes)
+route.use('/api/store', storeRoutes)
 
 route.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof UserAlreadyExistException) {
@@ -18,6 +21,10 @@ route.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       message: err.message
     })
   } else if (err instanceof UserNotFoundException) {
+    res.status(400).json({
+      message: err.message
+    })
+  } else if (err instanceof StoreAlreadyExistException) {
     res.status(400).json({
       message: err.message
     })

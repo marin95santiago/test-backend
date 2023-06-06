@@ -3,5 +3,9 @@
   "user": {
     "user_view": "user_view",
     "user_create": "user_create"
+  },
+  "store": {
+    "view": "store_view",
+    "create": "store_create"
   }
 }

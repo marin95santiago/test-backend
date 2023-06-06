@@ -4,11 +4,13 @@ import jwt from 'jsonwebtoken'
 
 export const validateToken = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   const { authorization } = req.headers
+  // Slice Berarer token
+  const token = authorization?.slice(7)
   const secret = process.env.SECRET ?? ''
   try {
-    if (authorization === undefined) return res.status(403).send({ message: 'Token is not supplied' })
+    if (token === undefined) return res.status(403).send({ message: 'Token is not supplied' })
 
-    jwt.verify(authorization ?? '', secret, (error, decoded) => {
+    jwt.verify(token ?? '', secret, (error, decoded) => {
       if (error !== null) {
         throw new UnhandledException('Token')
       }
