@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { DynamoDBStoreRepository } from '../../../../implementations/AWS/dynamo-db/DynamoDBStoreRepository'
+import { S3ListRepository } from '../../../../implementations/AWS/s3/S3ListRepository'
 import { StoreCreatorUseCase } from '../../../../../application/useCases/StoreCreator'
 import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
@@ -18,7 +19,8 @@ export const createStore = async (req: Request, res: Response, next: NextFunctio
   const { sessionUser } = req.params
 
   const dynamoDBStoreRepository = new DynamoDBStoreRepository()
-  const storeCreatorUseCase = new StoreCreatorUseCase(dynamoDBStoreRepository)
+  const s3ListRepository = new S3ListRepository()
+  const storeCreatorUseCase = new StoreCreatorUseCase(dynamoDBStoreRepository, s3ListRepository)
 
   try {
     const session = JSON.parse(sessionUser)
@@ -33,7 +35,8 @@ export const createStore = async (req: Request, res: Response, next: NextFunctio
       address,
       state,
       county,
-      postal_code: postalCode
+      postalCode: postalCode,
+      list: req.file ?? undefined
     })
 
     res.json(storeCreated)
