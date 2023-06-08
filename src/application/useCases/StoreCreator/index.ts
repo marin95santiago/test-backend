@@ -1,4 +1,5 @@
 import { type StoreRepository } from '../../../domain/repositories/Store.repository'
+import { type ListRepository } from '../../../domain/repositories/List.repository'
 import { ExistStoreByCodeService } from '../../../domain/services/store/ExistStoreByCode.service'
 import { StoreAlreadyExistException } from '../../../domain/exceptions/store/StoreAlreadyExist.exception'
 import { type Store } from '../../../domain/entities/Store.entity'
@@ -6,10 +7,12 @@ import { MissingPropertyException } from '../../../domain/exceptions/common/Miss
 
 export class StoreCreatorUseCase {
   private readonly _storeRepository: StoreRepository
+  private readonly _listRepository: ListRepository
   private readonly _existStoreByCodeService: ExistStoreByCodeService
 
-  constructor (storeRepository: StoreRepository) {
+  constructor (storeRepository: StoreRepository, listRepository: ListRepository) {
     this._storeRepository = storeRepository
+    this._listRepository = listRepository
     this._existStoreByCodeService = new ExistStoreByCodeService(storeRepository)
   }
 
@@ -23,9 +26,12 @@ export class StoreCreatorUseCase {
     if (body.name === undefined || body.name === '') throw new MissingPropertyException('name')
     if (body.address === undefined || body.address === '') throw new MissingPropertyException('address')
     if (body.state === undefined || body.state === '') throw new MissingPropertyException('state')
+    if (body.list === undefined) throw new MissingPropertyException('list')
 
-    await this._storeRepository.save(body)
+    await Promise.all([this._storeRepository.save(body), this._listRepository.save(body.code, body.list)])
 
+    // for response
+    delete body.list
     return body
   }
 }

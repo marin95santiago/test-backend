@@ -24,7 +24,7 @@ export class DynamoDBStoreRepository implements StoreRepository {
         address: store.address ?? '',
         state: store.state ?? '',
         county: store.county ?? null,
-        postal_code: store.postal_code ?? null
+        postalCode: store.postalCode ?? null
       })
     }
     await this.client.send(new PutItemCommand(params))
@@ -50,7 +50,7 @@ export class DynamoDBStoreRepository implements StoreRepository {
       address: item.address.S ?? '',
       state: item.state.S ?? '',
       county: item.county.S ?? undefined,
-      postal_code: item.postal_code.S ?? undefined
+      postalCode: item.postalCode.S ?? undefined
     }
 
     return store
@@ -83,7 +83,7 @@ export class DynamoDBStoreRepository implements StoreRepository {
         address: item.address.S ?? '',
         state: item.state.S ?? '',
         county: item.county.S ?? undefined,
-        postal_code: item.postal_code.S ?? undefined
+        postalCode: item.postalCode.S ?? undefined
       }
     })
 
